@@ -1,15 +1,7 @@
-<?php
-/* What's the Problem? 
-    - PHP logic + HTML in one file
-    - Works, but not scalable
-    - Repetition will become a problem
+<!--embed my logic into index file to be used inside of html.-->
 
-    How can we refactor this code so it’s easier to maintain?
-*/
+<?php require 'logic.php'?>
 
-$items = ["Home", "About", "Contact"];
-
-?>
 
 <!DOCTYPE html>
 <html>
@@ -21,10 +13,10 @@ $items = ["Home", "About", "Contact"];
 <h1>Welcome</h1>
 
 <ul>
-<?php foreach ($items as $item): ?>
-    <li><?= $item ?></li>
-<?php endforeach; ?>
+    <!--call my menu function inside body of html and under unordered list tag.-->
+    <?php menu() ?>
 </ul>
+
 
 <footer>
     <p>&copy; 2026</p>
