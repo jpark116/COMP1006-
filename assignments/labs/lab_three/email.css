@@ -1,0 +1,36 @@
+*{
+    box-sizing: border-box;
+    margin:0;
+    padding:0;
+}
+body{
+    width:90vw;
+    min-height:90vh;
+}
+form{
+
+    display: grid;
+    grid-template-columns: 1;
+    grid-template-rows: 1fr 10fr 1fr;
+    margin:auto;
+    row-gap: 20px;
+}
+
+#nameFieldset{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    padding:20px;
+}
+
+#submitButton{
+    height: 50px;
+    width: 100px;
+}
+
+#messageFieldset{
+    display:grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 15fr;
+    padding:20px;
+
+}
