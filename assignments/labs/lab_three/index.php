@@ -9,7 +9,7 @@
 <body>
 <!-- Create form for email -->
 <form action="process.php" method="post">
-
+    <!-- Fieldset to hold input for email address and customer name. -->
     <fieldset id="nameFieldset">
         
         <div>
@@ -27,7 +27,7 @@
 
     </fieldset>
 
-
+    <!-- Fieldset to hold input for message. -->
     <fieldset id="messageFieldset">
     
         <label for="message">Message:</label>
