@@ -19,31 +19,35 @@ $subject = 'New Message from Customer';
 $header = 'From:' . $fName . ' ' . $lName . '';
 
 // Validate all form fields for correct information format and send email returning success messsage, otherwise terminate script returning error message.
-// Validate first name.
+
+//making sure first name is not empty.
 if($fName == null || $fName == ''){
         echo 'The field for first name is empty.';
         exit;
         }       
+        //making sure last name is not empty.
         elseif($lName == null || $lName == ''){
             echo 'The field for last name is empty.';
             exit;
             }
-            
+            //making sure email address is not empty.
             elseif($email == null || $email == ''){
                 echo 'The field for email is empty.';
                 exit;
             }
-                
+                //making sure email address is proper format before sending.
                 elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
                     echo 'The field for email is not a valid email address.';                    
                     exit;
                 }
+                        //making sure message is not empty.
                         elseif($message == null || $message == ''){
                             echo'The field for message is empty.';
                             exit;
                         } 
                             else{
-                                echo 'The email has been sent to the bakery.';
+
+                                echo 'Information successfully submitted. Email will be sent to info@bakery.com';
                                 
                                 //sending email to bakery email address if there are no errors.
                                 mail($bakeryEmail, $subject, $message, $header);
