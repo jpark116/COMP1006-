@@ -1,42 +1,45 @@
 <?php
-require "includes/header.php";
-require "includes/connect.php";
-//STEP ONE access the form data and then echo on the screen in a confirmation message 
-//grab the data, clean and store in a variable - santize! 
-$firstName = filter_input(INPUT_POST, 'first_name', FILTER_SANITIZE_SPECIAL_CHARS);
-$lastName = filter_input(INPUT_POST, 'last_name', FILTER_SANITIZE_SPECIAL_CHARS);
-$address = filter_input(INPUT_POST, 'address', FILTER_SANITIZE_SPECIAL_CHARS);
+//connect to the db and create new PDO
+require "includes/connect.php";  
 
-$email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-$phone     = filter_input(
-    INPUT_POST,
-    'phone',
-    FILTER_SANITIZE_SPECIAL_CHARS
-);
-$comments = filter_input(INPUT_POST, 'comments', FILTER_SANITIZE_SPECIAL_CHARS);
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    die('Invalid request');
+}
+
+//sanitize input 
+// trim() removes extra whitespace at the start/end of user input.
+// filter_input() helps sanitize incoming form data.
+$firstName = trim(filter_input(INPUT_POST, 'first_name', FILTER_SANITIZE_SPECIAL_CHARS));
+$lastName  = trim(filter_input(INPUT_POST, 'last_name', FILTER_SANITIZE_SPECIAL_CHARS));
+$email     = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+$phone     = trim(filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_SPECIAL_CHARS));
+$address   = trim(filter_input(INPUT_POST, 'address', FILTER_SANITIZE_SPECIAL_CHARS));
+$comments  = trim(filter_input(INPUT_POST, 'comments', FILTER_SANITIZE_SPECIAL_CHARS));
+
+// Item quantities come in as an array only if your form uses names like:
+// name="items[chaos_croissant]" etc.
 $items = $_POST['items'] ?? [];
 
-//STEP TWO - validation time - serverside 
-
+//server-side validation 
 $errors = [];
 
-//require text fields 
+// Required fields
 if ($firstName === null || $firstName === '') {
-    $errors[] = "First Name is Required.";
+    $errors[] = "First Name is required.";
 }
 
 if ($lastName === null || $lastName === '') {
-    $errors[] = "Last Name is Required.";
+    $errors[] = "Last Name is required.";
 }
 
-//require email and validate proper format 
+// Email: required + format check
 if ($email === null || $email === '') {
-    $errors[] = "Email is Required";
+    $errors[] = "Email is required.";
 } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    $errors[] = "Email must be a valid email";
+    $errors[] = "Email must be a valid email address.";
 }
 
-// require phone number and validate proper format 
+// Phone: required + simple regex format check
 if ($phone === null || $phone === '') {
     $errors[] = "Phone number is required.";
 } elseif (!filter_var($phone, FILTER_VALIDATE_REGEXP, [
@@ -45,65 +48,62 @@ if ($phone === null || $phone === '') {
     $errors[] = "Phone number format is invalid.";
 }
 
-//require address
+// Address: required
 if ($address === null || $address === '') {
     $errors[] = "Address is required.";
 }
+
+// Validate order quantities
+// We only accept items with an integer quantity > 0.
 $itemsOrdered = [];
-//check that the order quantity is a number 
 
 foreach ($items as $item => $quantity) {
     if (filter_var($quantity, FILTER_VALIDATE_INT) !== false && $quantity > 0) {
         $itemsOrdered[$item] = $quantity;
     }
 }
+
+// Require at least one item to be ordered
 if (count($itemsOrdered) === 0) {
-    $errors[] = "Please order at least one item";
+    $errors[] = "Please order at least one item.";
 }
 
-//loop through error messages 
-
-//if there are errors, display to user and exit the script 
+// If there are errors, show them and stop the script before inserting to the DB
 if (!empty($errors)) {
-    foreach ($errors as $error) : ?>
-        <li><?php echo $error; ?> </li>
-<?php endforeach;
-    //stop the script from executing  
+    require "includes/header.php"; 
+    echo "<div class='alert alert-danger'>";
+    echo "<h2>Please fix the following:</h2>";
+    echo "<ul>";
+    foreach ($errors as $error) {
+        echo "<li>" . htmlspecialchars($error) . "</li>";
+    }
+    echo "</ul>";
+    echo "</div>";
+
+    require "includes/footer.php";
     exit;
 }
 
-/* 
-STEP THREE - Prepare Data for the DB 
-*/
-
-// Start with all quantities at 0
-
-// Overwrite with actual ordered quantities (only allowed keys)
 
 /* 
-STEP FOUR - INSERT THE ORDER USING A PREPARED STATEMENT
+INSERT THE ORDER USING A PREPARED STATEMENT
 */
 
 //set up the query used named placeholders
 
 //prepare the query 
 
-
 //execute the query, matching the placeholder with the data entered by user
-
 ?>
 
-<main>
-    <!-- echo the data the user submitted -->
-    <?php echo "<h2> Thanks for your order " . $firstName . "</h2>"; ?>
-
-    <h3> Items Ordered </h3>
-    <ul>
-        <!-- use for each loop to loop through array and display quantities -->
-        <?php foreach ($items as $item => $quantity): ?>
-            <li><?php echo $item ?> - <?php echo $quantity ?> </li>
-        <?php endforeach; ?>
-    </ul>
-</main>
+<!--Confirmation Message -->
+<?php require "includes/header.php"; ?> 
+<div class="alert alert-success">
+    <h1>Thank you for your order, <?= htmlspecialchars($firstName) ?>!</h1>
+    <p>
+        We’ve received your order and will contact you at
+        <strong><?= htmlspecialchars($email) ?></strong>.
+    </p>
+</div>
 
 <?php require "includes/footer.php"; ?>
