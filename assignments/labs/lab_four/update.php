@@ -1,12 +1,12 @@
 <?php
 require "connection.php";
 
-//Making sure id exists.
+//making sure id exists.
 if (!isset($_GET['id'])) {
     die("No subscriber ID provided.");
 }
 
-//Set Update ID to id from subscribers page.
+//set Update ID to id from subscribers page.
 $subscriber_id = $_GET['id'];
 
 //Post under condition that form is submitted.
@@ -26,7 +26,7 @@ else{
                 email = :email
             WHERE id = :id";
 
-//Prepare statement.   
+//prepare statement.   
 $stmt = $pdo->prepare($sql);
 
 //Bind parameters.
@@ -58,12 +58,12 @@ if(!$subscriber){
 }
 ?>
 
-<!-- Prevents display of form if there is an error previously. -->
+<!-- prevents display of form if there is an error previously. -->
 <main>
 <?php if (!empty($error)): ?>
     <p class="text-danger"><?= htmlspecialchars($error); ?></p>
   <?php endif; ?>
-  <!-- Form populated with subscriber data from specific id that can be changed/updated with new information. -->
+  <!-- form populated with subscriber data from specific id that can be changed/updated with new information. -->
     <form method="post">
         <h2>Update subscriber <?= htmlspecialchars($subscriber['id']);?></h2>
 
@@ -76,7 +76,7 @@ if(!$subscriber){
         <label for="email">Email</label>
         <input type="text" id="email" name="email" value="<?= htmlspecialchars($subscriber['email'])?>">
         </input>
-        <!-- Button to save changes made in form. -->
+        <!-- button to save changes made in form. -->
         <button class="btn btn-primary">Save Changes</button>
         <a href="subscribers.php" class="btn btn-secondary">Cancel</a>
         </input>
