@@ -16,7 +16,7 @@ $sql = "DELETE FROM subscribers
 
 //binding id from subscribers page.   
 
-//Prepare the statement.
+//prepare the statement.
 $stmt = $pdo->prepare($sql);
 $stmt->bindParam(':id', $subscriber_id);
 
