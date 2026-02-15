@@ -62,12 +62,19 @@ if (!empty($errors)) {
 /* INSERT THE ORDER USING A PREPARED STATEMENT*/
 
 //set up the query used named placeholders
+sql = "INSERT INTO orders(first_name, last_name, phone, address, emaikl, comments) VALUES (:first_name, :last_name, :phone, :address, :email, :comments)";
 
 
 //prepare the query 
+$stmt = $pdo->prepare(sql)
 
 
 //bind parameters
+$stmt->bindParam(':first_name', $firstName);
+$stmt->bindParam(:'last_name', $lastName);
+$stmt->bindParam(:'phone', $phone);
+$stmt->bindParam(:'address', $address);
+$stmt->bindParam(:'email', $email)
 
 
 //execute the query, matching the placeholder with the data entered by user

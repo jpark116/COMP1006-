@@ -17,9 +17,11 @@ require "includes/connect.php";
 -------------------------------------------- */
 if (!isset($_GET['id'])) {
   die("No order ID provided.");
+  #get id specific induvidual
 }
 
 $customerId = $_GET['id'];
+#this is getting the id from orders.php
 
 /* -------------------------------------------
    STEP 2: If form is submitted, UPDATE the row
@@ -33,6 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $address   = trim($_POST['address'] ?? '');
   $email     = trim($_POST['email'] ?? '');
 
+  #Grabs code from the order form
+
   // Product quantities (force to integer, prevent blanks)
   $chaosCroissant       = (int)($_POST['chaos_croissant'] ?? 0);
   $existentialEclair    = (int)($_POST['existential_eclair'] ?? 0);
@@ -41,7 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Simple validation (beginner-friendly)
   if ($firstName === '' || $lastName === '' || $email === '') {
     $error = "First name, last name, and email are required.";
+    // error for being empty
   } else {
+    // go into update if all information is there, access UPDATE, existing values are SET as the same value in position of customer id 
 
     $sql = "UPDATE orders1
             SET first_name = :first_name,
@@ -55,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             WHERE customer_id = :customer_id";
 
     $stmt = $pdo->prepare($sql);
+    // preparing statement to 
 
     // Bind parameters (safe + beginner friendly)
     $stmt->bindParam(':first_name', $firstName);

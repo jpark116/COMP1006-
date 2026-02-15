@@ -76,12 +76,13 @@ $orders = $stmt->fetchAll();
 
               <td>
                 <!-- Sends the ID to update.php -->
+                 <!-- This button gets the customers id for update.php  -->
                 <a
                   class="btn btn-sm btn-warning"
-                  href="update.php?id=<?= urlencode($order['customer_id']); ?>"
-                >
+                  href="update.php?id=<?= urlencode($order['customer_id']); ?>">
+                
                   Update
-                </a>
+          </a>
               </td>
             </tr>
 
